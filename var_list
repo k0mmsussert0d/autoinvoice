@@ -1,0 +1,17 @@
+issuer_name=Papa Smerf
+issuer_street=ul. Uliczna 11/1 lok. 12
+issuer_zip=00=300
+issuer_city=Warszawa
+issuer_phone=22 3334455
+issuer_tax=555666888
+invoice_no=FV$y/$m/$d/$nr
+buyer_name=Gargamel Ltd.
+buyer_street=al. Lecha Kaczyńskiego 123/3
+buyer_zip=02-232
+buyer_city=Warszawa
+buyer_tax=4564556456
+issue_city=Warszawa
+issue_date=2018-03-13
+deadline_date=2018-04-13
+service_date=2018-03-13
+payment_method=przelew
