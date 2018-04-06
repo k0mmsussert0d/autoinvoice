@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# Parse input arguments
+# Source files
+itemrow=rows/item
 
+# Parse input arguments
 src_file=$1
 dst_file=$2
 var_file=$3
+
+# Number of items on the invoice
+items=0
 
 # Get current date values
 d=$(date '+%d')
@@ -40,13 +45,15 @@ for (( i=1; $i <= lines; i++ )) ; do
         val=""
 
         # Check if it's for another item of an invoice
-		if [[ $var == \[Item] ]] ; then
+		if [[ $var == "[Item]" ]] ; then
+			if [ $items -ne 0 ] ; then
+                sed -i '/\itemrowend/ r $itemrow' $2
+			fi
 			
 			
+			((items++))
 			: '
             TODO:
-                + add another row to the table list
-                + fill the row with values
                 + calculate gross values
             '
 		fi
@@ -74,3 +81,4 @@ for (( i=1; $i <= lines; i++ )) ; do
 done
 
 # sed -i "s/"#invoice_no"/"FV123456"/" $dst_file
+
