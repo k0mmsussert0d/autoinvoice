@@ -12,3 +12,11 @@ function replace {
         printf "WARNING: Did not find any occurences of \"$1\" in \"$3\"\n"
     fi
 }
+
+# Looks for instances of $1 in array pointed at $2 (example: searchArray "$a" "${array[@]}"
+function searchArray {
+    local e match="$1"
+    shift
+    for e; do [[ "$e" == "$match" ]] && return 0; done
+    return 1;
+}

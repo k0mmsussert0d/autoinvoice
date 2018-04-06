@@ -18,6 +18,12 @@ var_file=$3
 # Number of items on the invoice
 items=0
 
+# Array of tax rates
+tax_rate_list=()
+
+# Quantity of tax rates stores in tax_rate_list array
+tax_rate_list_size=0
+
 # Get current date values
 d=$(date '+%d')
 m=$(date '+%-m')
@@ -57,7 +63,7 @@ for (( i=1; $i <= lines; i++ )) ; do
 			((i++))
 			
 			# If it's another item, add new row in items table
-			if [ $items -ne 0 ] ; then
+			if [[ $items -ne 0 ]] ; then
                 sed -i '/itemrowend/ r $itemrow' $2
 			fi
 			
@@ -71,8 +77,16 @@ for (( i=1; $i <= lines; i++ )) ; do
                 exit 1
 			fi
 			
-			if [ "$var" == "item_tax_rate" ]; then
+			# Look for a line with taxation rate
+			if [[ "$var" == "item_tax_rate" ]]; then
                 
+                # Search for it in array
+                searchArray "$val" "${tax_rate_list[@]}"
+                
+                # If it hasn't been mentioned yet, add it to the array
+                if [[ $? -eq 1 ]]
+                    tax_rate_list+=($val)
+                fi
 			fi
 			
 			# Insert '#' at the beginning of variable name, so sed will find its position in dst_file
