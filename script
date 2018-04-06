@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Include the functions file
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]] ; then
+    DIR="$PWD"
+fi
+. "$DIR/func"
+
 # Source files
 itemrow=rows/item
 
@@ -46,11 +53,35 @@ for (( i=1; $i <= lines; i++ )) ; do
 
         # Check if it's for another item of an invoice
 		if [[ $var == "[Item]" ]] ; then
+			# Go to the next line
+			((i++))
+			
+			# If it's another item, add new row in items table
 			if [ $items -ne 0 ] ; then
-                sed -i '/\itemrowend/ r $itemrow' $2
+                sed -i '/itemrowend/ r $itemrow' $2
 			fi
 			
+			# Get variable name and its value (separated by '=' character)
+			var=$(echo $line | cut -d'=' -f1)
+			val=$(echo $line | cut -d'=' -f2)
 			
+			# Check if both variable name and variable are not NULL
+			if [ -z "$var" ] || [ -z "$val" ] ; then
+                printf "Error. Insufficent arguments on line %d\n" "$i"
+                exit 1
+			fi
+			
+			if [ "$var" == "item_tax_rate" ]; then
+                
+			fi
+			
+			# Insert '#' at the beginning of variable name, so sed will find its position in dst_file
+			var="#${var}"
+			
+			# Replace all occurences of $var with $val
+			replace $var $val $dst_file
+			
+			# Quantity of items on the invoice - increment
 			((items++))
 			: '
             TODO:
@@ -70,13 +101,7 @@ for (( i=1; $i <= lines; i++ )) ; do
         var="#${var}"
 
         # Replace all occurreneces of $var with $val
-        sed -i "s%$var%$val%" "$dst_file"
-
-        # Check if any occurence was found. Inform, if not
-        status=$0
-        if [[ $status != "0" ]] ; then
-            printf "sed could not find match for %s variable\n" "$var"
-        fi
+        replace $var $val $dst_file
 	fi
 done
 
