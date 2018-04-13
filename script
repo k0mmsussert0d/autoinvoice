@@ -18,8 +18,14 @@ var_file=$3
 # Number of items on the invoice
 items=0
 
-# Array of tax rates
+# Arrays for tax rates
 tax_rate_list=()
+
+tax_whole_netto=()
+tax_whole_tax=()
+tax_whole_gross=()
+
+# Array of tax whole 
 
 # Quantity of tax rates stores in tax_rate_list array
 tax_rate_list_size=0
@@ -58,13 +64,16 @@ for (( i=1; $i <= lines; i++ )) ; do
         val=""
 
         # Check if it's for another item of an invoice
-		if [[ $var == "[Item]" ]] ; then
+		if [[ $var == "[Item]" ]] ; then					
 			# Go to the next line
 			((i++))
 			
-			# If it's another item, add new row in items table
+			# If it's another item, add new row in items table and clear variables
 			if [[ $items -ne 0 ]] ; then
                 sed -i '/itemrowend/ r $itemrow' $2
+                curr_item_tax_rate=""
+                curr_item_quan=""
+                curr_item_price_netto=""
 			fi
 			
 			# Quantity of items on the invoice - increment
@@ -100,6 +109,19 @@ for (( i=1; $i <= lines; i++ )) ; do
 
         # Replace all occurreneces of $var with $val
         replace $var $val $dst_file
+        
+        # If all needed data has been collected, calculate total price for the current item(s)
+        if [[ ! -z "$curr_item_tax_rate" ]] && [[ ! -z "$curr_item_quan" ]] && [[ ! -z "$curr_item_price_netto" ]]; then
+            # Calculate tax to be paid for this item
+            to_add=$curr_item_tax_rate*$curr_item_quan*$curr_item_price_netto
+            
+            # Add it to the total tax to be paid
+            if [[ -z $tax_whole_tax[ items ] ]]; then
+                tax_whole_tax[ items ]=$to_add
+            else
+                ((tax_whole_tax[ items ]+=$to_add))
+            fi
+        fi
 	fi
 done
 
