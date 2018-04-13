@@ -17,6 +17,10 @@ function replace {
 function searchArray {
     local e match="$1"
     shift
+    
+    # Return 0 if found a first instance
     for e; do [[ "$e" == "$match" ]] && return 0; done
+    
+    # Return 1 if went through the array without detecting any instances
     return 1;
 }

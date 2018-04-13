@@ -67,40 +67,8 @@ for (( i=1; $i <= lines; i++ )) ; do
                 sed -i '/itemrowend/ r $itemrow' $2
 			fi
 			
-			# Get variable name and its value (separated by '=' character)
-			var=$(echo $line | cut -d'=' -f1)
-			val=$(echo $line | cut -d'=' -f2)
-			
-			# Check if both variable name and variable are not NULL
-			if [ -z "$var" ] || [ -z "$val" ] ; then
-                printf "Error. Insufficent arguments on line %d\n" "$i"
-                exit 1
-			fi
-			
-			# Look for a line with taxation rate
-			if [[ "$var" == "item_tax_rate" ]]; then
-                
-                # Search for it in array
-                searchArray "$val" "${tax_rate_list[@]}"
-                
-                # If it hasn't been mentioned yet, add it to the array
-                if [[ $? -eq 1 ]]
-                    tax_rate_list+=($val)
-                fi
-			fi
-			
-			# Insert '#' at the beginning of variable name, so sed will find its position in dst_file
-			var="#${var}"
-			
-			# Replace all occurences of $var with $val
-			replace $var $val $dst_file
-			
 			# Quantity of items on the invoice - increment
 			((items++))
-			: '
-            TODO:
-                + calculate gross values
-            '
 		fi
 
     # If it's not a header, check if both variable name and variable are not NULL
@@ -110,7 +78,23 @@ for (( i=1; $i <= lines; i++ )) ; do
 
     # If it goes here, it means we have valid variable line, perform an insertion
 	else
-		:
+        # Look for a line with taxation rate
+		if [[ "$var" == "item_tax_rate" ]]; then
+            curr_item_tax_rate=$var
+            
+            # Search for it in array
+            searchArray "$val" "${tax_rate_list[@]}"
+                
+            # If it hasn't been mentioned yet, add it to the array
+            if [[ $? -eq 1 ]]
+                tax_rate_list+=($val)
+            fi
+        elif [[ "$var" == "item_quan" ]]; then
+            curr_item_quan=$var
+        elif [[ "$var" == "item_price_netto" ]]; then
+            curr_item_price_netto=$var
+        fi 
+        
         # Insert '#' at the beginning of variable name, so sed will find its position in dst_file
         var="#${var}"
 
