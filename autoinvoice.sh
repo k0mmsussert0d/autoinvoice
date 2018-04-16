@@ -9,6 +9,7 @@ fi
 
 # Source files
 itemrow=rows/item
+taxrow=rows/taxrate
 
 # Parse input arguments
 src_file=$1
@@ -18,14 +19,13 @@ var_file=$3
 # Number of items on the invoice
 items=0
 
-# Arrays for tax rates
+# Array for tax rates, stored as whole integers (e.g. 23 for 23% taxation)
 tax_rate_list=()
 
+# Arrays for tax-dependent total values
 tax_whole_netto=()
 tax_whole_tax=()
 tax_whole_gross=()
-
-# Array of tax whole 
 
 # Quantity of tax rates stores in tax_rate_list array
 tax_rate_list_size=0
@@ -50,7 +50,7 @@ cp $src_file $dst_file
 lines=$(wc -l < $3)
 
 # Read each variable
-for (( i=1; $i <= lines; i++ )) ; do
+for (( i=1; i <= $lines; i++ )) ; do
     # Get i-th line of a var_file
 	line=$(sed -n ""$i"p" $var_file)
 
@@ -70,7 +70,7 @@ for (( i=1; $i <= lines; i++ )) ; do
 			
 			# If it's another item, add new row in items table and clear variables
 			if [[ $items -ne 0 ]] ; then
-                sed -i '/itemrowend/ r $itemrow' $2
+                replaceWithFile "itemrowend" $itemrow $dst_file
                 curr_item_tax_rate=""
                 curr_item_quan=""
                 curr_item_price_netto=""
@@ -89,20 +89,20 @@ for (( i=1; $i <= lines; i++ )) ; do
 	else
         # Look for a line with taxation rate
 		if [[ "$var" == "item_tax_rate" ]]; then
-            curr_item_tax_rate=$var
+            curr_item_tax_rate=$val
             
             # Search for it in array
-            searchArray "$val" "${tax_rate_list[@]}"
+            searchArray "$curr_item_tax_rate" "${tax_rate_list[@]}"
                 
             # If it hasn't been mentioned yet, add it to the array
             if [[ $? -eq 1 ]]
                 tax_rate_list+=($val)
             fi
         elif [[ "$var" == "item_quan" ]]; then
-            curr_item_quan=$var
+            curr_item_quan=$val
         elif [[ "$var" == "item_price_netto" ]]; then
-            curr_item_price_netto=$var
-        fi 
+            curr_item_price_netto=$val
+        fi
         
         # Insert '#' at the beginning of variable name, so sed will find its position in dst_file
         var="#${var}"
@@ -123,6 +123,15 @@ for (( i=1; $i <= lines; i++ )) ; do
             fi
         fi
 	fi
+done
+
+for (( i=1; i <= ${#tax_rate_list[@]} )) ; do
+    # If it's not a first tax rate, add a row for it
+    if [[ $i -ne 1 ]] ; then
+        replaceWithFile "taxrowend" $taxrow $dst_file
+    fi
+
+    
 done
 
 # sed -i "s/"#invoice_no"/"FV123456"/" $dst_file
