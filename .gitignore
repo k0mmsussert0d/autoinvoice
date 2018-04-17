@@ -1,2 +1,5 @@
 # Project files #
 *.kdev4
+
+# Test scripts #
+test/
