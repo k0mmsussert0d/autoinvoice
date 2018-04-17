@@ -130,21 +130,37 @@ done
 # Get an amount of rates based on tax array length
 rates=${#tax_whole_netto[@])}
 
+tax_whole_netto_sum=0
+tax_whole_tax_sum=0
+tax_whole_gross_sum=0
+
 # Print each tax-rate row (K - key)
 for K in "${!tax_whole_netto[@]}"; do
-    # Get values for this key
+    # Get values for this key and add each value to the respective sum
     curr_tax_rate=$K
+
     curr_tax_whole_netto=${tax_whole_netto[$K]}
+    tax_whole_netto_sum=$(floatMath "$curr_tax_whole_netto+$tax_whole_netto_sum" 2)
+
     curr_tax_whole_tax=${tax_whole_tax[$K])}
+    tax_whole_tax_sum=$(floatMath "$curr_tax_whole_tax+$tax_whole_tax_sum" 2)
+
     curr_tax_whole_gross=${tax_whole_gross[$K]}
+    tax_whole_gross_sum=$(floatMath "$curr_tax_whole_gross+$tax_whole_gross_sum" 2)
 
     # Generate row, if it's another rate
     if [[ $i -ne 1 ]] ; then
         replaceWithFile "taxrowend" $taxrow $dst_file
     fi
 
+    # Insert sums for current rate
     replace "#tax_rate" $curr_tax_rate $dst_file
     replace "#tax_whole_netto" $curr_tax_whole_netto $dst_file
     replace "#tax_whole_tax" $curr_tax_whole_tax $dst_file
     replace "#tax_whole_gross" $curr_tax_whole_gross        
 done
+
+# Inserts sums for all tax rates
+replace "#tax_whole_netto_sum" $tax_whole_netto_sum
+replace "#tax_whole_tax_sum" $tax_whole_tax_sum
+replace "#tax_whole_gross_sum" $tax_whole_gross_sum
