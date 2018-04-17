@@ -13,6 +13,19 @@ function replace {
     fi
 }
 
+# Replacing all occurences of $1 in file $3 with content of file $2
+function replaceWithFile {
+    # Check if file $3 contains at least one occurence of $1
+    grep -q $1 $3
+
+    # If so, replace them
+    if [ $? -eq 0 ] ; then
+        sed -i "/$1/ r $2" "$3"
+    else # If not, print warning
+        printf "WARNING: Did not find any occurences of \"$1\" file content in \"$3\"\n"
+    fi
+}
+
 # Looks for instances of $1 in array pointed at $2 (example: searchArray "$a" "${array[@]}"
 function searchArray {
     local e match="$1"
