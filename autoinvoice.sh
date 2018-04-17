@@ -89,7 +89,7 @@ for (( i=1; i <= $lines; i++ )) ; do
         # Look for item quantity
         elif [[ "$var" == "item_quan" ]]; then
             curr_item_quan=$val
-            
+
          # Look for item netto price
         elif [[ "$var" == "item_price_netto" ]]; then
             curr_item_price_netto=$val
@@ -104,7 +104,7 @@ for (( i=1; i <= $lines; i++ )) ; do
         # If all needed data has been collected, perform pricing calculations for current item
         if [[ ! -z "$curr_item_tax_rate" ]] && [[ ! -z "$curr_item_quan" ]] && [[ ! -z "$curr_item_price_netto" ]]; then
             # Calculate tax for one piece of this item
-            item_price_tax=$(floatMath "$curr_item_price_netto*$curr_item_tax_rate")
+            item_price_tax=$(floatMath "$curr_item_price_netto*$curr_item_tax_rate" 2)
             
             # Calculate gross price for one piece of this item
             item_price_gross=$(floatMath "$curr_item_price_netto+$item_price_tax" 2)
@@ -127,14 +127,24 @@ for (( i=1; i <= $lines; i++ )) ; do
 	fi
 done
 
-for (( i=1; i <= ${#tax_rate_list[@]} )) ; do
-    # If it's not a first tax rate, add a row for it
+# Get an amount of rates based on tax array length
+rates=${#tax_whole_netto[@])}
+
+# Print each tax-rate row (K - key)
+for K in "${!tax_whole_netto[@]}"; do
+    # Get values for this key
+    curr_tax_rate=$K
+    curr_tax_whole_netto=${tax_whole_netto[$K]}
+    curr_tax_whole_tax=${tax_whole_tax[$K])}
+    curr_tax_whole_gross=${tax_whole_gross[$K]}
+
+    # Generate row, if it's another rate
     if [[ $i -ne 1 ]] ; then
         replaceWithFile "taxrowend" $taxrow $dst_file
     fi
 
-    replace "#tax_rate" $(printf "%d%" "$tax" ${tax_rate_list[$i]})
+    replace "#tax_rate" $curr_tax_rate $dst_file
+    replace "#tax_whole_netto" $curr_tax_whole_netto $dst_file
+    replace "#tax_whole_tax" $curr_tax_whole_tax $dst_file
+    replace "#tax_whole_gross" $curr_tax_whole_gross        
 done
-
-# sed -i "s/"#invoice_no"/"FV123456"/" $dst_file
-
