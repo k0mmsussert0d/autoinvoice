@@ -21,6 +21,7 @@ items=0
 
 # Array for tax rates, stored as whole integers (e.g. 23 for 23% taxation)
 tax_rate_list=()
+rates=0
 
 # Arrays for tax-dependent total values
 tax_whole_netto=()
@@ -97,6 +98,7 @@ for (( i=1; i <= $lines; i++ )) ; do
             # If it hasn't been mentioned yet, add it to the array
             if [[ $? -eq 1 ]]
                 tax_rate_list+=($val)
+                ((rates++))
             fi
         elif [[ "$var" == "item_quan" ]]; then
             curr_item_quan=$val
@@ -119,7 +121,7 @@ for (( i=1; i <= $lines; i++ )) ; do
             if [[ -z $tax_whole_tax[ items ] ]]; then
                 tax_whole_tax[ items ]=$to_add
             else
-                ((tax_whole_tax[ items ]+=$to_add))
+                ((tax_whole_tax[ items ]+=to_add))
             fi
         fi
 	fi
@@ -131,7 +133,7 @@ for (( i=1; i <= ${#tax_rate_list[@]} )) ; do
         replaceWithFile "taxrowend" $taxrow $dst_file
     fi
 
-    
+    replace "#tax_rate" $(printf "%d%" "$tax" ${tax_rate_list[$i]})
 done
 
 # sed -i "s/"#invoice_no"/"FV123456"/" $dst_file
