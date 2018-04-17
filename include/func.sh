@@ -37,3 +37,7 @@ function searchArray {
     # Return 1 if went through the array without detecting any instances
     return 1;
 }
+
+function floatMath {
+    return $(bc <<< "scale=$2; $1")
+}
