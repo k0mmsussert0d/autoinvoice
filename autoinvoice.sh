@@ -30,7 +30,7 @@ m=$(date '+%-m')
 y=$(date '+%Y')
 
 # Get invoice number (from environment variable)
-nr=$(printf"%06d" "1")
+nr=$(printf "%06d" "1")
 : '
 TODO:
     + register env variable for $nr generation
@@ -99,7 +99,7 @@ for (( i=1; i <= $lines; i++ )) ; do
         var="#${var}"
 
         # Replace all occurreneces of $var with $val
-        replace $var $val $dst_file
+        replace "$var" "$val" "$dst_file"
         
         # If all needed data has been collected, perform pricing calculations for current item
         if [[ ! -z "$curr_item_tax_rate" ]] && [[ ! -z "$curr_item_quan" ]] && [[ ! -z "$curr_item_price_netto" ]]; then
@@ -154,10 +154,10 @@ for K in "${!tax_whole_netto[@]}"; do
     fi
 
     # Insert sums for current rate
-    replace "#tax_rate" $curr_tax_rate $dst_file
-    replace "#tax_whole_netto" $curr_tax_whole_netto $dst_file
-    replace "#tax_whole_tax" $curr_tax_whole_tax $dst_file
-    replace "#tax_whole_gross" $curr_tax_whole_gross        
+    replace "#tax_rate" "$curr_tax_rate" "$dst_file"
+    replace "#tax_whole_netto" "$curr_tax_whole_netto" "$dst_file"
+    replace "#tax_whole_tax" "$curr_tax_whole_tax" "$dst_file"
+    replace "#tax_whole_gross" "$curr_tax_whole_gross" "$dst_file"
 done
 
 # Inserts sums for all tax rates
