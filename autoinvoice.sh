@@ -5,7 +5,7 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]] ; then
     DIR="$PWD"
 fi
-. "$DIR/func"
+. "$DIR/include/func"
 
 # Source files
 itemrow=rows/item
