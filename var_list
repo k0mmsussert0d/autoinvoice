@@ -16,8 +16,8 @@ deadline_date=2018-04-13
 service_date=2018-03-13
 payment_method=przelew
 [Item]
-item_name="Usługa jakaśtam"
-item_unit="szt"
+item_name=Usługa jakaśtam
+item_unit=szt
 item_quan=1
 item_price_netto=50
 item_tax_rate=23
