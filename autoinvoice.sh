@@ -59,8 +59,6 @@ for (( i=1; i <= $lines; i++ )) ; do
 
         # Check if it's for another item of an invoice
 		if [[ $var == "[Item]" ]] ; then					
-			# Go to the next line
-			((i++))
 			
 			# If it's another item, add new row in items table and clear variables
 			if [[ $items -ne 0 ]] ; then
