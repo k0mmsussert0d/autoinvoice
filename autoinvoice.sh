@@ -70,6 +70,9 @@ for (( i=1; i <= $lines; i++ )) ; do
 			
 			# Quantity of items on the invoice - increment
 			((items++))
+
+            # Insert an index number
+            replace "#item_no" "$items" "$dst_file" 
 		fi
 
     # If it's not a header, check if both variable name and variable are not NULL
