@@ -39,5 +39,13 @@ function searchArray {
 }
 
 function floatMath {
-    return $(bc <<< "scale=$2; $1")
+    # Default accuracy of rounding up is 2
+    if [[ -z $2 ]] ; then
+        acc=2
+    else
+        acc=$2
+    fi
+
+    # Print with leading zero
+    echo ""0"$(bc <<< "scale=$acc; $1")"
 }
