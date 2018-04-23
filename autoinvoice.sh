@@ -91,11 +91,11 @@ for (( i=1; i <= $lines; i++ )) ; do
 			((items++))
 
             # Insert an index number
-            to_print[item_no]=$items
+            to_print["#item_no"]=$items
 		fi
 
     # If it's not a header, check if both variable name and variable are not NULL
-	elif [ -z "$var" ] || [ -z "$val" ] ; then
+	elif [ -z "$var" ] || [ -z "$val" ]; then
 		printf "Error. Insufficent arguments on line %d\n" "$i"
 		exit 1
 
@@ -144,7 +144,11 @@ for (( i=1; i <= $lines; i++ )) ; do
 	fi
 
     # Add current replacement rule to the the respective array
-    if [[ $item_bool -eq 0 ]]; then
+    
+    # Skip the header
+    if [[ $var == \[* ]]; then
+        continue
+    elif [[ $item_bool -eq 0 ]]; then
         to_print_protected[$var]=$val
     else
         to_print[$var]=$val
@@ -153,11 +157,13 @@ done
 
 # Print arrays
 for K in "${!to_print_protected[@]}"; do
-    replace $K ${to_print_protected[$K]} $dst_file
+    echo "$K" "${to_print_protected[$K]}"
+    replace "$K" "${to_print_protected[$K]}" "$dst_file"
 done
 
 for K in "${!to_print[@]}"; do
-    replace $K ${to_print[$K]} $dst_file
+    echo "$K" "${to_print[$K]}"
+    replace "$K" "${to_print[$K]}" "$dst_file"
 done
 
 tax_whole_netto_sum=0
@@ -165,6 +171,7 @@ tax_whole_tax_sum=0
 tax_whole_gross_sum=0
 
 # Print each tax-rate row (K - key)
+j=1
 for K in "${!tax_whole_netto[@]}"; do
     # Get values for this key and add each value to the respective sum
     curr_tax_rate=$K
@@ -179,14 +186,12 @@ for K in "${!tax_whole_netto[@]}"; do
     tax_whole_gross_sum=$(floatMath "$curr_tax_whole_gross+$tax_whole_gross_sum" 2)
 
     # Generate row, if it's another rate
-    if [[ $i -ne 1 ]] ; then
+    if [[ $j -ne 1 ]] ; then
         replaceWithFile "taxrowend" $taxrow $dst_file
     fi
 
     # Insert sums for current rate
-    replace "#tax_rate" "$curr_tax_rate" "$dst_file"
-    replace "#tax_whole_netto" "$curr_tax_whole_netto" "$dst_file"
-    replace "#tax_whole_tax" "$curr_tax_whole_tax" "$dst_file"
-    replace "#tax_whole_gross" "$curr_tax_whole_gross" "$dst_file"
+
+    ((j++))
 done
 
