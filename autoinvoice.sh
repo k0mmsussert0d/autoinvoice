@@ -129,17 +129,17 @@ for (( i=1; i <= $lines; i++ )) ; do
             # Calculate total netto price for all pieces of this item
             to_print["#whole_price_netto"]=$(floatMath "$curr_item_price_netto*$curr_item_quan" 2)
             # Add total netto price of current item to the total netto of a respective tax rate
-            tax_whole_netto[$curr_item_tax_rate]=$(floatMath "${tax_whole_netto[$curr_item_tax_rate]}+$whole_price_netto")
+            tax_whole_netto[$curr_item_tax_rate]=$(floatMath "${tax_whole_netto[$curr_item_tax_rate]}+${to_print["#whole_price_netto"]}")
 
             # Calculate total tax for all pieces of this item
-            whole_price_tax=$(floatMath "$whole_price_netto*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
+            whole_price_tax=$(floatMath "${to_print["#whole_price_netto"]}*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             # Add total tax of current item to the total tax of a respective tax rate
             tax_whole_tax[$curr_item_tax_rate]=$(floatMath "${tax_whole_tax[$curr_item_tax_rate]}+$whole_price_tax" 2)
 
             # Calculate total gross price for all pieces of this item
-            to_print["#whole_price_gross"]=$(floatMath "$whole_price_netto+$whole_price_tax" 2)
+            to_print["#whole_price_gross"]=$(floatMath "${to_print["#whole_price_netto"]}+$whole_price_tax" 2)
             # Add total gross price of current item to the total gross of a respective tax rate
-            tax_whole_gross[$curr_item_tax_rate]=$(floatMath "${tax_whole_gross[$curr_item_tax_rate]}+$whole_price_gross" 2)
+            tax_whole_gross[$curr_item_tax_rate]=$(floatMath "${tax_whole_gross[$curr_item_tax_rate]}+${to_print["#whole_price_gross"]}" 2)
         fi
 	fi
 
@@ -190,7 +190,7 @@ for K in "${!tax_whole_netto[@]}"; do
 
     curr_tax_whole_gross=${tax_whole_gross[$K]}
     tax_whole_gross_sum=$(floatMath "$curr_tax_whole_gross+$tax_whole_gross_sum" 2)
-    to_print_tax=$curr_tax_whole_gross
+    to_print_tax["#tax_whole_gross"]=$curr_tax_whole_gross
 
     # Generate row, if it's another rate
     if [[ $j -ne 1 ]] ; then
