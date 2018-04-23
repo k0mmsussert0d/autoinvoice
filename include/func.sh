@@ -47,5 +47,11 @@ function floatMath {
     fi
 
     # Print with leading zero
-    echo ""0"$(bc <<< "scale=$acc; $1")"
+    res=$(bc <<< "scale=$acc; $1")
+
+    if [[ $res == \.* ]] ; then
+        echo "0""$res"
+    else
+        echo "$res"
+    fi
 }
