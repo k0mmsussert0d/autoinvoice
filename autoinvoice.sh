@@ -173,24 +173,34 @@ tax_whole_gross_sum=0
 # Print each tax-rate row (K - key)
 j=1
 for K in "${!tax_whole_netto[@]}"; do
-    # Get values for this key and add each value to the respective sum
+    # Initialize or reset an array storing values to be printed in this tax rates row
+    declare -A to_print_tax
+    
+    # Get value of tax rate, add it to an array as whole integer
     curr_tax_rate=$K
+    to_print_tax["#tax_rate"]=$(floatMath "$curr_tax_rate*100" 0)
 
     curr_tax_whole_netto=${tax_whole_netto[$K]}
     tax_whole_netto_sum=$(floatMath "$curr_tax_whole_netto+$tax_whole_netto_sum" 2)
+    to_print_tax["#tax_whole_netto"]=$curr_tax_whole_netto
 
     curr_tax_whole_tax=${tax_whole_tax[$K])}
     tax_whole_tax_sum=$(floatMath "$curr_tax_whole_tax+$tax_whole_tax_sum" 2)
+    to_print_tax["#tax_whole_tax"]=$curr_tax_whole_tax
 
     curr_tax_whole_gross=${tax_whole_gross[$K]}
     tax_whole_gross_sum=$(floatMath "$curr_tax_whole_gross+$tax_whole_gross_sum" 2)
+    to_print_tax=$curr_tax_whole_gross
 
     # Generate row, if it's another rate
     if [[ $j -ne 1 ]] ; then
         replaceWithFile "taxrowend" $taxrow $dst_file
     fi
 
-    # Insert sums for current rate
+    for L in "${!to_print_tax[@]}"; do
+        echo "$L" "${to_print[$K]}"
+        replace "$L" "${to_print_tax[$L]}" "$dst_file"
+    done
 
     ((j++))
 done
