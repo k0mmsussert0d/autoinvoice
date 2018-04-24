@@ -124,22 +124,22 @@ for (( i=1; i <= $lines; i++ )) ; do
             item_price_tax=$(floatMath "$curr_item_price_netto*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             
             # Calculate gross price for one piece of this item
-            to_print["#item_price_gross"]=$(floatMath "$curr_item_price_netto+$item_price_tax" 2)
+            to_print['#item_price_gross']=$(floatMath "$curr_item_price_netto+$item_price_tax" 2)
 
             # Calculate total netto price for all pieces of this item
-            to_print["#whole_price_netto"]=$(floatMath "$curr_item_price_netto*$curr_item_quan" 2)
+            to_print['#whole_price_netto']=$(floatMath "$curr_item_price_netto*$curr_item_quan" 2)
             # Add total netto price of current item to the total netto of a respective tax rate
-            tax_whole_netto[$curr_item_tax_rate]=$(floatMath "${tax_whole_netto[$curr_item_tax_rate]}+${to_print["#whole_price_netto"]}")
+            tax_whole_netto['$curr_item_tax_rate']=$(addToArray "${tax_whole_netto['$curr_item_tax_rate']}" "${to_print['#whole_price_netto']}")
 
             # Calculate total tax for all pieces of this item
             whole_price_tax=$(floatMath "${to_print["#whole_price_netto"]}*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             # Add total tax of current item to the total tax of a respective tax rate
-            tax_whole_tax[$curr_item_tax_rate]=$(floatMath "${tax_whole_tax[$curr_item_tax_rate]}+$whole_price_tax" 2)
+            tax_whole_tax['$curr_item_tax_rate']=$(addToArray "${tax_whole_tax['$curr_item_tax_rate']}" "$whole_price_tax")
 
             # Calculate total gross price for all pieces of this item
             to_print["#whole_price_gross"]=$(floatMath "${to_print["#whole_price_netto"]}+$whole_price_tax" 2)
             # Add total gross price of current item to the total gross of a respective tax rate
-            tax_whole_gross[$curr_item_tax_rate]=$(floatMath "${tax_whole_gross[$curr_item_tax_rate]}+${to_print["#whole_price_gross"]}" 2)
+            tax_whole_gross[$curr_item_tax_rate]=$(addToArray "${tax_whole_gross['$curr_item_tax_rate']}" "${to_print['#whole_price_gross']}")
         fi
 	fi
 
@@ -180,7 +180,7 @@ for K in "${!tax_whole_netto[@]}"; do
     curr_tax_rate=$K
     to_print_tax["#tax_rate"]=$(floatMath "$curr_tax_rate*100" 0)
 
-    curr_tax_whole_netto=${tax_whole_netto[$K]}
+    curr_tax_whole_netto=${tax_whole_netto['$K']}
     tax_whole_netto_sum=$(floatMath "$curr_tax_whole_netto+$tax_whole_netto_sum" 2)
     to_print_tax["#tax_whole_netto"]=$curr_tax_whole_netto
 
@@ -198,7 +198,7 @@ for K in "${!tax_whole_netto[@]}"; do
     fi
 
     for L in "${!to_print_tax[@]}"; do
-        echo "$L" "${to_print[$K]}"
+        echo "$L" "${to_print_tax[$L]}"
         replace "$L" "${to_print_tax[$L]}" "$dst_file"
     done
 

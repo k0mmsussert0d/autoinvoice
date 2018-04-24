@@ -55,3 +55,11 @@ function floatMath {
         echo "$res"
     fi
 }
+
+function addToArray {
+    if [[ $1 == "" ]] ; then
+        echo $2
+    else
+        echo $(floatMath "$1+$2" $3)
+    fi
+}
