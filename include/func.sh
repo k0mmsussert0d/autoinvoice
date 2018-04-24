@@ -47,7 +47,7 @@ function floatMath {
     fi
 
     # Print with leading zero
-    res=$(bc <<< "scale=$acc; $1")
+    res=$(bc <<< "scale=$acc; ($1)/1")
 
     if [[ $res == \.* ]] ; then
         echo "0""$res"
