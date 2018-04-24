@@ -129,12 +129,12 @@ for (( i=1; i <= $lines; i++ )) ; do
             # Calculate total netto price for all pieces of this item
             to_print['#whole_price_netto']=$(floatMath "$curr_item_price_netto*$curr_item_quan" 2)
             # Add total netto price of current item to the total netto of a respective tax rate
-            tax_whole_netto['$curr_item_tax_rate']=$(addToArray "${tax_whole_netto['$curr_item_tax_rate']}" "${to_print['#whole_price_netto']}")
+            tax_whole_netto[$curr_item_tax_rate]=$(addToArray "${tax_whole_netto['$curr_item_tax_rate']}" "${to_print['#whole_price_netto']}")
 
             # Calculate total tax for all pieces of this item
             whole_price_tax=$(floatMath "${to_print["#whole_price_netto"]}*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             # Add total tax of current item to the total tax of a respective tax rate
-            tax_whole_tax['$curr_item_tax_rate']=$(addToArray "${tax_whole_tax['$curr_item_tax_rate']}" "$whole_price_tax")
+            tax_whole_tax[$curr_item_tax_rate]=$(addToArray "${tax_whole_tax['$curr_item_tax_rate']}" "$whole_price_tax")
 
             # Calculate total gross price for all pieces of this item
             to_print["#whole_price_gross"]=$(floatMath "${to_print["#whole_price_netto"]}+$whole_price_tax" 2)
@@ -180,7 +180,7 @@ for K in "${!tax_whole_netto[@]}"; do
     curr_tax_rate=$K
     to_print_tax["#tax_rate"]=$(floatMath "$curr_tax_rate*100" 0)
 
-    curr_tax_whole_netto=${tax_whole_netto['$K']}
+    curr_tax_whole_netto=${tax_whole_netto[$K]}
     tax_whole_netto_sum=$(floatMath "$curr_tax_whole_netto+$tax_whole_netto_sum" 2)
     to_print_tax["#tax_whole_netto"]=$curr_tax_whole_netto
 
