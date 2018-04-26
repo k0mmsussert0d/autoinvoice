@@ -204,4 +204,3 @@ for K in "${!tax_whole_netto[@]}"; do
 
     ((j++))
 done
-
