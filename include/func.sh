@@ -39,5 +39,27 @@ function searchArray {
 }
 
 function floatMath {
-    return $(bc <<< "scale=$2; $1")
+    # Default accuracy of rounding up is 2
+    if [[ -z $2 ]] ; then
+        acc=2
+    else
+        acc=$2
+    fi
+
+    # Print with leading zero
+    res=$(bc <<< "scale=$acc; ($1)/1")
+
+    if [[ $res == \.* ]] ; then
+        echo "0""$res"
+    else
+        echo "$res"
+    fi
+}
+
+function addToArray {
+    if [[ $1 == "" ]] ; then
+        echo $2
+    else
+        echo $(floatMath "$1+$2" $3)
+    fi
 }

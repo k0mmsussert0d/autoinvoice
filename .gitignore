@@ -1,5 +1,6 @@
 # Project files #
 *.kdev4
+*.code-workspace
 
 # Test scripts #
 test/
