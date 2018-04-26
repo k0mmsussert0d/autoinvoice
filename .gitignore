@@ -4,6 +4,7 @@
 
 # Test scripts #
 test/
+.vscode/
 
 # Compiled C app of unicode.c #
-unicode
+utf
