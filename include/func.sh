@@ -3,13 +3,17 @@
 # Replacing all occurences of $1 with $2 in file $3
 function replace {
     # Check if file $3 contains at least one occurence of $1
-    grep -q "$1" "$3"
+    old_needle=$1
+    haystack=$3
+    
+    grep -q "$old_needle" "$haystack"
     
     # If so, replace them
     if [ $? -eq 0 ] ; then
-        sed -i "s%$1%$2%" "$3"
+        new_needle=$(./utf <<< "$2")
+        sed -i "s%$old_needle%$new_needle%" "$haystack"
     else # If not, print warning
-        printf "WARNING: Did not find any occurences of \"$1\" in \"$3\"\n"
+        printf "WARNING: Did not find any occurences of \"$old_needle\" in \"$haystack\"\n"
     fi
 }
 

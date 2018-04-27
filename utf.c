@@ -35,9 +35,12 @@ int main(void) {
 			break;
 		}
 
-        // Print a decimal value of the character
-		printf("%d\n", c16);
-		// printf("U+%.4"PRIx16"\n", c16);
+		if( c16 >= -128 && c16 <= 127 ) {
+			// Print ASCII character
+			printf("%c", c16);
+		} else {
+			printf("\\\\u%d\\\\'3f", c16);
+		}
 
 		i += n;
 	}
