@@ -63,6 +63,7 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Get variable name and its value (separated by '=' character)
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
+    val=$(eval echo $val)
 
     # Check if current line is header (starts with '[')
 	if [[ $var == \[* ]] ; then
