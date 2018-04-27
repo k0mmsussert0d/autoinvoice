@@ -205,3 +205,7 @@ for K in "${!tax_whole_netto[@]}"; do
     ((j++))
 done
 
+# Print invoice totals
+replace "#sum_tax_whole_netto" "$tax_whole_netto_sum" "$dst_file"
+replace "#sum_tax_whole_tax" "$tax_whole_tax_sum" "$dst_file"
+replace "#sum_tax_whole_gross" "$tax_whole_gross_sum" "$dst_file"
