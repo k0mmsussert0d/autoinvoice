@@ -65,6 +65,21 @@ for (( i=1; i <= $lines; i++ )) ; do
 	val=$(echo $line | cut -d'=' -f2)
     val=$(eval echo $val)
 
+    # Look for invoice number syntax
+    if [[ $var == "print_no" ]] ; then
+        print="%0"$val"d"
+        continue
+    fi
+    
+    # Look for ordinal number
+    if [[ $var == "ordinal_no" ]] ; then
+        # Generate full invoice number
+        nr=$(printf "$print" "$val")
+        # Increment ordinal number in var_list file
+        gawk -i inplace '{FS=OFS="=" }/ordinal_no/{$2+=1}1' var_list
+        continue
+    fi
+
     # Check if current line is header (starts with '[')
 	if [[ $var == \[* ]] ; then
         # Clear this line variable		
