@@ -8,3 +8,5 @@ test/
 
 # Compiled C app of unicode.c #
 utf
+
+# Compiled C app of dateadd.c #
