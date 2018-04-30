@@ -95,7 +95,7 @@ for (( i=1; i <= $lines; i++ )) ; do
             # add new row in items table
 			if [[ $items -ne 0 ]] ; then
                 for K in "${!to_print[@]}"; do
-                    replace $K ${to_print[$K]} $dst_file
+                    replace "$K" "${to_print[$K]}" "$dst_file"
                 done
 
                 replaceWithFile "itemrowend" $itemrow $dst_file
