@@ -38,8 +38,10 @@ declare -A tax_whole_gross
 
 # Get current date values
 d=$(date '+%d')
+m_long=$(date '+%m')
 m=$(date '+%-m')
 y=$(date '+%Y')
+today=$y"-"$m_long"-"$d
 
 # Get invoice number (from environment variable)
 nr=$(printf "%06d" "1")
