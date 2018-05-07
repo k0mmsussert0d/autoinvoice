@@ -45,11 +45,6 @@ today=$y"-"$m_long"-"$d
 
 # Get invoice number (from environment variable)
 nr=$(printf "%06d" "1")
-: '
-TODO:
-    + register env variable for $nr generation
-    + increment it after successful script execution
-'
 
 # Create a new invoice file
 cp $src_file $dst_file
@@ -131,6 +126,11 @@ for (( i=1; i <= $lines; i++ )) ; do
         # Look for item netto price
         elif [[ "$var" == "item_price_netto" ]]; then
             curr_item_price_netto=$val
+        elif [[ "$var" == "service_date" ]]; then
+            service_date=$val
+        elif [[ "$var" == "deadline_date" ]]; then
+            newval=$(./dateadd $service_date $val)
+            val=$newval
         fi
         
         # Insert '#' at the beginning of variable name, so sed will find its position in dst_file
