@@ -121,6 +121,11 @@ for (( i=1; i <= $lines; i++ )) ; do
 
             # Insert an index number
             to_print["#item_no"]=$items
+        
+        # If it's meta file section
+        elif [[ $var == "[Meta]" ]] ; then
+            # Stop parsing it, this section is meant for the other script
+            break
 		fi
 
     # If it's not a header, check if both variable name and variable are not NULL
