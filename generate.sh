@@ -47,7 +47,7 @@ today=$y"-"$m_long"-"$d
 nr=$(printf "%06d" "1")
 
 # Create a new invoice file
-cp $src_file $dst_file
+cp "$src_file" "$dst_file"
 
 # Count lines in the file containing variables
 lines=$(wc -l < $3)
@@ -63,6 +63,7 @@ for (( i=1; i <= $lines; i++ )) ; do
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
     val=$(eval echo $val)
+    val=$(echo "${val//\"}")
 
     # Look for invoice number syntax
     if [[ $var == "print_no" ]] ; then
@@ -101,7 +102,7 @@ for (( i=1; i <= $lines; i++ )) ; do
                     replace "$K" "${to_print[$K]}" "$dst_file"
                 done
 
-                replaceWithFile "itemrowend" $itemrow $dst_file
+                replaceWithFile "itemrowend" "$itemrow" "$dst_file"
                 unset to_print
                 declare -A to_print
 			fi
@@ -221,7 +222,7 @@ for K in "${!tax_whole_netto[@]}"; do
 
     # Generate row, if it's another rate
     if [[ $j -ne 1 ]] ; then
-        replaceWithFile "taxrowend" $taxrow $dst_file
+        replaceWithFile "taxrowend" "$taxrow" "$dst_file"
     fi
 
     for L in "${!to_print_tax[@]}"; do
