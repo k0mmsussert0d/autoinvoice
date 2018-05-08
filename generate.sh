@@ -95,9 +95,11 @@ for (( i=1; i <= $lines; i++ )) ; do
         # Check if it's new item block
 		if [[ $var == "[Item]" ]] ; then					
 			
-            # Switch boolean flag
+            # Switch boolean flags
             item_bool=1
             calculated=0
+
+            # Clear variables that need to be calculated
             curr_item_tax_rate=""
             curr_item_quan=""
             curr_item_price_netto=""
