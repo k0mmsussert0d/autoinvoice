@@ -62,7 +62,14 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Get variable name and its value (separated by '=' character)
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
+
+    # Evaluate the variable, so the variables inside it will get defined
     val=$(eval echo $val)
+
+    # Declare the variable itself, so it can be used by outside scripts
+    printf -v $var "$val"
+
+    # Remove \" marks from variables
     val=$(echo "${val//\"}")
 
     # Look for invoice number syntax

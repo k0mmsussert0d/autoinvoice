@@ -10,6 +10,7 @@ fi
 for V in "${filelist[@]}"; do
     source $V
     filename="$buyer_name $(date '+%y.%m.%d-%H:%M').rtf"
-    ./generate.sh "$template" "$filename" "$V"
+    source generate.sh "$template" "$filename" "$V"
     mv "$filename" "$buyer_name-$ordinal_no"
+    echo $invoice_no
 done
