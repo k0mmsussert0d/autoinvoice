@@ -11,3 +11,6 @@ utf
 
 # Compiled C app of dateadd.c #
 dateadd
+
+# Enabled configs directory (created during installation) #
+conf-enabled/
