@@ -33,4 +33,5 @@ item_tax_rate=23
 [Meta]
 template=wzor.rtf
 mail_to=maksymilian.babarowski@gmail.com
+mail_subject="Faktura VAT nr $invoice_no"
 mail_content=tba

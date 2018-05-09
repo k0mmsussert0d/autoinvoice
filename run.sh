@@ -9,8 +9,7 @@ fi
 
 for V in "${filelist[@]}"; do
     source $V
-    filename="$buyer_name $(date '+%y.%m.%d-%H:%M').rtf"
+    filename="$buyer_name-$ordinal_no.rtf"
     source generate.sh "$template" "$filename" "$V"
-    mv "$filename" "$buyer_name-$ordinal_no"
-    echo $invoice_no
+    mutt -s "$mail_subject" "$mail_to" -a "$filename" < "$mail_content"
 done
