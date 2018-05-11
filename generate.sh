@@ -67,7 +67,9 @@ for (( i=1; i <= $lines; i++ )) ; do
     val=$(eval echo $val)
 
     # Declare the variable itself, so it can be used by outside scripts
-    printf -v $var "$val"
+    if [[ $var != \#* ]] ; then
+        printf -v $var "$val"
+    fi
 
     # Remove \" marks from variables
     val=$(echo "${val//\"}")
@@ -84,13 +86,14 @@ for (( i=1; i <= $lines; i++ )) ; do
         nr=$(printf "$print" "$val")
         # Undo evaluation, remove '$' character
         env=$(echo $line | cut -d'=' -f2)
+        env=$(echo "${env//\$}")
 
         # Increment env value
         ((${env}++))
         continue
     fi
 
-    # Check if current line is header (starts with '[')
+    # Check if current line is header (starts with '#')
 	if [[ $var == \#* ]] ; then
         # Clear this line variable		
         val=""
@@ -191,7 +194,7 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Add current replacement rule to the the respective array
     
     # Skip the header
-    if [[ $var == \#* ]]; then
+    if [[ $var == *\# ]]; then
         continue
     elif [[ $item_bool -eq 0 ]]; then
         to_print_protected[$var]=$val
