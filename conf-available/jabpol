@@ -18,19 +18,19 @@ service_date=$today
 deadline_date=30
 payment_method=przelew
 curr=zł
-[Item]
+#Item#
 item_name="Usługa pierwsza"
 item_unit=szt
 item_quan=1
 item_price_netto=500
 item_tax_rate=23
-[Item]
+#Item#
 item_name="Usługa druga"
 item_unit=szt
 item_quan=1
 item_price_netto=2000
 item_tax_rate=23
-[Meta]
+#Meta#
 template=wzor.rtf
 mail_to=maksymilian.babarowski@gmail.com
 mail_subject="Faktura VAT nr $invoice_no"
