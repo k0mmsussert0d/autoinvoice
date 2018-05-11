@@ -31,7 +31,8 @@ item_quan=1
 item_price_netto=2000.00
 item_tax_rate=23
 #Meta#
-template=wzor.rtf
+rtf_template=default.rtf
+mail_template=default.txt
 mail_to=maksymilian.babarowski@gmail.com
+mail_bbc=
 mail_subject="Faktura VAT nr $invoice_no"
-mail_content=tba

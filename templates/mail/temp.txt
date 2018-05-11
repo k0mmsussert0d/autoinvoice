@@ -1,0 +1,31 @@
+cat <<END_OF_TEXT
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title></title>
+</head>
+
+<body>
+<p>Szanowni Państwo!</p>
+<p>Dziękujemy za skorzystanie z naszych usług. W załączniku przesyłamy fakturę nr  .</p>
+<p>Prosimy o terminową wpłatę.</p><br />
+<p>Z poważaniem,<br />
+</p>
+</body>
+</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title></title>
+</head>
+
+<body>
+<p>Szanowni Państwo!</p>
+<p>Dziękujemy za skorzystanie z naszych usług. W załączniku przesyłamy fakturę nr  .</p>
+<p>Prosimy o terminową wpłatę.</p><br />
+<p>Z poważaniem,<br />
+</p>
+</body>
+</html>

@@ -10,6 +10,7 @@ fi
 for V in "${filelist[@]}"; do
     source $V
     filename="$buyer_name-$ordinal_no.rtf"
-    source generate.sh "$template" "$filename" "$V"
-    mutt -s "$mail_subject" "$mail_to" -a "$filename" < "$mail_content"
+    source generate.sh "templates/rtf/$rtf_template" "$filename" "$V"
+    # mutt -s "$mail_subject" "$mail_to" -a "$filename" < "templates/mail/temp.txt"
+    rm temp.txt
 done
