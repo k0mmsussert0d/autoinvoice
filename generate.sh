@@ -191,7 +191,7 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Add current replacement rule to the the respective array
     
     # Skip the header
-    if [[ $var == \[* ]]; then
+    if [[ $var == \#* ]]; then
         continue
     elif [[ $item_bool -eq 0 ]]; then
         to_print_protected[$var]=$val
