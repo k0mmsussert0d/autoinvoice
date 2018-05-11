@@ -38,22 +38,21 @@ declare -A tax_whole_gross
 
 # Get current date values
 d=$(date '+%d')
+m_long=$(date '+%m')
 m=$(date '+%-m')
 y=$(date '+%Y')
+today=$y"-"$m_long"-"$d
 
 # Get invoice number (from environment variable)
 nr=$(printf "%06d" "1")
-: '
-TODO:
-    + register env variable for $nr generation
-    + increment it after successful script execution
-'
 
 # Create a new invoice file
-cp $src_file $dst_file
+cp "$src_file" "$dst_file"
 
 # Count lines in the file containing variables
 lines=$(wc -l < $3)
+
+calculated=0
 
 # Read each variable
 for (( i=1; i <= $lines; i++ )) ; do
@@ -63,7 +62,15 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Get variable name and its value (separated by '=' character)
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
+
+    # Evaluate the variable, so the variables inside it will get defined
     val=$(eval echo $val)
+
+    # Declare the variable itself, so it can be used by outside scripts
+    printf -v $var "$val"
+
+    # Remove \" marks from variables
+    val=$(echo "${val//\"}")
 
     # Look for invoice number syntax
     if [[ $var == "print_no" ]] ; then
@@ -75,8 +82,11 @@ for (( i=1; i <= $lines; i++ )) ; do
     if [[ $var == "ordinal_no" ]] ; then
         # Generate full invoice number
         nr=$(printf "$print" "$val")
-        # Increment ordinal number in var_list file
-        gawk -i inplace '{FS=OFS="=" }/ordinal_no/{$2+=1}1' var_list
+        # Undo evaluation, remove '$' character
+        env=$(echo $line | cut -d'=' -f2)
+
+        # Increment env value
+        ((${env}++))
         continue
     fi
 
@@ -88,17 +98,23 @@ for (( i=1; i <= $lines; i++ )) ; do
         # Check if it's new item block
 		if [[ $var == "[Item]" ]] ; then					
 			
-            # Switch boolean flag
+            # Switch boolean flags
             item_bool=1
+            calculated=0
+
+            # Clear variables that need to be calculated
+            curr_item_tax_rate=""
+            curr_item_quan=""
+            curr_item_price_netto=""
 			
 			# If it's another item, print the current item array, flush it,
             # add new row in items table
 			if [[ $items -ne 0 ]] ; then
                 for K in "${!to_print[@]}"; do
-                    replace $K ${to_print[$K]} $dst_file
+                    replace "$K" "${to_print[$K]}" "$dst_file"
                 done
 
-                replaceWithFile "itemrowend" $itemrow $dst_file
+                replaceWithFile "itemrowend" "$itemrow" "$dst_file"
                 unset to_print
                 declare -A to_print
 			fi
@@ -108,6 +124,11 @@ for (( i=1; i <= $lines; i++ )) ; do
 
             # Insert an index number
             to_print["#item_no"]=$items
+        
+        # If it's meta file section
+        elif [[ $var == "[Meta]" ]] ; then
+            # Stop parsing it, this section is meant for the other script
+            break
 		fi
 
     # If it's not a header, check if both variable name and variable are not NULL
@@ -129,13 +150,18 @@ for (( i=1; i <= $lines; i++ )) ; do
         # Look for item netto price
         elif [[ "$var" == "item_price_netto" ]]; then
             curr_item_price_netto=$val
+        elif [[ "$var" == "service_date" ]]; then
+            service_date=$val
+        elif [[ "$var" == "deadline_date" ]]; then
+            newval=$(./dateadd $service_date $val)
+            val=$newval
         fi
         
         # Insert '#' at the beginning of variable name, so sed will find its position in dst_file
         var="#${var}"
 
         # If all needed data has been collected, perform pricing calculations for current item
-        if [[ ! -z "$curr_item_tax_rate" ]] && [[ ! -z "$curr_item_quan" ]] && [[ ! -z "$curr_item_price_netto" ]]; then
+        if [[ ! -z "$curr_item_tax_rate" ]] && [[ ! -z "$curr_item_quan" ]] && [[ ! -z "$curr_item_price_netto" ]] && [[ $calculated -eq 0 ]]; then
             # Calculate tax value for one piece of this item
             item_price_tax=$(floatMath "$curr_item_price_netto*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             
@@ -145,17 +171,20 @@ for (( i=1; i <= $lines; i++ )) ; do
             # Calculate total netto price for all pieces of this item
             to_print['#whole_price_netto']=$(floatMath "$curr_item_price_netto*$curr_item_quan" 2)
             # Add total netto price of current item to the total netto of a respective tax rate
-            tax_whole_netto[$curr_item_tax_rate]=$(addToArray "${tax_whole_netto['$curr_item_tax_rate']}" "${to_print['#whole_price_netto']}")
+            tax_whole_netto[$curr_item_tax_rate]=$(addToArray "${tax_whole_netto[$curr_item_tax_rate]}" "${to_print['#whole_price_netto']}")
 
             # Calculate total tax for all pieces of this item
             whole_price_tax=$(floatMath "${to_print["#whole_price_netto"]}*$curr_item_tax_rate" 2) ### THIS VALUE WILL NOT BE PRINTED ###
             # Add total tax of current item to the total tax of a respective tax rate
-            tax_whole_tax[$curr_item_tax_rate]=$(addToArray "${tax_whole_tax['$curr_item_tax_rate']}" "$whole_price_tax")
+            tax_whole_tax[$curr_item_tax_rate]=$(addToArray "${tax_whole_tax[$curr_item_tax_rate]}" "$whole_price_tax")
 
             # Calculate total gross price for all pieces of this item
             to_print["#whole_price_gross"]=$(floatMath "${to_print["#whole_price_netto"]}+$whole_price_tax" 2)
             # Add total gross price of current item to the total gross of a respective tax rate
-            tax_whole_gross[$curr_item_tax_rate]=$(addToArray "${tax_whole_gross['$curr_item_tax_rate']}" "${to_print['#whole_price_gross']}")
+            tax_whole_gross[$curr_item_tax_rate]=$(addToArray "${tax_whole_gross[$curr_item_tax_rate]}" "${to_print['#whole_price_gross']}")
+
+            # Set a flag to 1, so values for this item won't be recalculated
+            calculated=1
         fi
 	fi
 
@@ -197,27 +226,26 @@ for K in "${!tax_whole_netto[@]}"; do
     to_print_tax["#tax_rate"]=$(floatMath "$curr_tax_rate*100" 0)
 
     curr_tax_whole_netto=${tax_whole_netto[$K]}
-    tax_whole_netto_sum=$(floatMath "$curr_tax_whole_netto+$tax_whole_netto_sum" 2)
+    tax_whole_netto_sum=$(addToArray "$tax_whole_netto_sum" "$curr_tax_whole_netto")
     to_print_tax["#tax_whole_netto"]=$curr_tax_whole_netto
 
     curr_tax_whole_tax=${tax_whole_tax[$K])}
-    tax_whole_tax_sum=$(floatMath "$curr_tax_whole_tax+$tax_whole_tax_sum" 2)
+    tax_whole_tax_sum=$(addToArray "$tax_whole_tax_sum" "$curr_tax_whole_tax")
     to_print_tax["#tax_whole_tax"]=$curr_tax_whole_tax
 
     curr_tax_whole_gross=${tax_whole_gross[$K]}
-    tax_whole_gross_sum=$(floatMath "$curr_tax_whole_gross+$tax_whole_gross_sum" 2)
+    tax_whole_gross_sum=$(addToArray "$tax_whole_gross_sum" "$curr_tax_whole_gross")
     to_print_tax["#tax_whole_gross"]=$curr_tax_whole_gross
 
     # Generate row, if it's another rate
     if [[ $j -ne 1 ]] ; then
-        replaceWithFile "taxrowend" $taxrow $dst_file
+        replaceWithFile "taxrowend" "$taxrow" "$dst_file"
     fi
 
     for L in "${!to_print_tax[@]}"; do
         echo "$L" "${to_print_tax[$L]}"
         replace "$L" "${to_print_tax[$L]}" "$dst_file"
     done
-
     ((j++))
 done
 

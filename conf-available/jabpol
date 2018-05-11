@@ -1,0 +1,37 @@
+issuer_name="Franciszek Borkowski"
+issuer_street="ul. Czarnoleska 66"
+issuer_zip=51-621
+issuer_city=Wrocław
+issuer_phone="695 126 029"
+issuer_tax=5489674120
+print_no=6
+ordinal_no=$JABPOL
+invoice_no=FV$y/$m/$d/$nr
+buyer_name="Jabłpol Sp. z o. o."
+buyer_street="ul. 3 Maja 24"
+buyer_zip=37-700
+buyer_city=Przemyśl
+buyer_tax=4712548367
+issue_city=Wrocław
+issue_date=$today
+service_date=$today
+deadline_date=30
+payment_method=przelew
+curr=zł
+[Item]
+item_name="Usługa pierwsza"
+item_unit=szt
+item_quan=1
+item_price_netto=500
+item_tax_rate=23
+[Item]
+item_name="Usługa druga"
+item_unit=szt
+item_quan=1
+item_price_netto=2000
+item_tax_rate=23
+[Meta]
+template=wzor.rtf
+mail_to=maksymilian.babarowski@gmail.com
+mail_subject="Faktura VAT nr $invoice_no"
+mail_content=tba

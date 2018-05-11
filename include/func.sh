@@ -20,7 +20,7 @@ function replace {
 # Replacing all occurences of $1 in file $3 with content of file $2
 function replaceWithFile {
     # Check if file $3 contains at least one occurence of $1
-    grep -q $1 $3
+    grep -q "$1" "$3"
 
     # If so, replace them
     if [ $? -eq 0 ] ; then
