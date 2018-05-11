@@ -82,8 +82,11 @@ for (( i=1; i <= $lines; i++ )) ; do
     if [[ $var == "ordinal_no" ]] ; then
         # Generate full invoice number
         nr=$(printf "$print" "$val")
-        # Increment ordinal number in var_file
-        gawk -i inplace '{FS=OFS="=" }/ordinal_no/{$2+=1}1' $var_file
+        # Undo evaluation, remove '$' character
+        env=$(echo $line | cut -d'=' -f2)
+
+        # Increment env value
+        ((${env}++))
         continue
     fi
 
