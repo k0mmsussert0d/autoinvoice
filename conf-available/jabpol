@@ -5,7 +5,7 @@ issuer_city=Wrocław
 issuer_phone="695 126 029"
 issuer_tax=5489674120
 print_no=6
-ordinal_no=$JABPOL
+ordinal_no=1
 invoice_no=FV$y/$m/$d/$nr
 buyer_name="Jabłpol Sp. z o. o."
 buyer_street="ul. 3 Maja 24"
@@ -22,13 +22,13 @@ curr=zł
 item_name="Usługa pierwsza"
 item_unit=szt
 item_quan=1
-item_price_netto=500
+item_price_netto=500.00
 item_tax_rate=23
 #Item#
 item_name="Usługa druga"
 item_unit=szt
 item_quan=1
-item_price_netto=2000
+item_price_netto=2000.00
 item_tax_rate=23
 #Meta#
 template=wzor.rtf
