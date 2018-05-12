@@ -18,13 +18,13 @@ deadline_date=2018-$($m+1)-13
 service_date=2018-04-13
 payment_method=przelew
 curr=zł
-[Item]
+#Item#
 item_name=Usługa pierwsza
 item_unit=szt
 item_quan=1
 item_price_netto=500
 item_tax_rate=23
-[Item]
+#Item#
 item_name=Usługa druga
 item_unit=szt
 item_quan=1

@@ -67,7 +67,9 @@ for (( i=1; i <= $lines; i++ )) ; do
     val=$(eval echo $val)
 
     # Declare the variable itself, so it can be used by outside scripts
-    printf -v $var "$val"
+    if [[ $var != \#* ]] ; then
+        printf -v $var "$val"
+    fi
 
     # Remove \" marks from variables
     val=$(echo "${val//\"}")
@@ -82,21 +84,18 @@ for (( i=1; i <= $lines; i++ )) ; do
     if [[ $var == "ordinal_no" ]] ; then
         # Generate full invoice number
         nr=$(printf "$print" "$val")
-        # Undo evaluation, remove '$' character
-        env=$(echo $line | cut -d'=' -f2)
-
-        # Increment env value
-        ((${env}++))
+        # Increment ordinal number in var_file
+        gawk -i inplace '{FS=OFS="=" }/ordinal_no/{$2+=1}1' $var_file
         continue
     fi
 
-    # Check if current line is header (starts with '[')
-	if [[ $var == \[* ]] ; then
+    # Check if current line is header (starts with '#')
+	if [[ $var == \#* ]] ; then
         # Clear this line variable		
         val=""
 
         # Check if it's new item block
-		if [[ $var == "[Item]" ]] ; then					
+		if [[ $var == "#Item#" ]] ; then					
 			
             # Switch boolean flags
             item_bool=1
@@ -126,7 +125,7 @@ for (( i=1; i <= $lines; i++ )) ; do
             to_print["#item_no"]=$items
         
         # If it's meta file section
-        elif [[ $var == "[Meta]" ]] ; then
+        elif [[ $var == "#Meta#" ]] ; then
             # Stop parsing it, this section is meant for the other script
             break
 		fi
@@ -191,7 +190,7 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Add current replacement rule to the the respective array
     
     # Skip the header
-    if [[ $var == \[* ]]; then
+    if [[ $var == *\# ]]; then
         continue
     elif [[ $item_bool -eq 0 ]]; then
         to_print_protected[$var]=$val
