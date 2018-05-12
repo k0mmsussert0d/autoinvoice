@@ -7,9 +7,7 @@
 
 <body>
 <p>Szanowni Państwo!</p>
-<p>Dziękujemy za skorzystanie z naszych usług. W załączniku przesyłamy fakturę nr $invoice_no .</p>
+<p>Dziękujemy za skorzystanie z naszych usług. W załączniku przesyłamy fakturę.</p>
 <p>Prosimy o terminową wpłatę.</p><br />
-<p>Z poważaniem,<br />
-$issuer_name </p>
 </body>
 </html>
