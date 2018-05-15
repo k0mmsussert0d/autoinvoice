@@ -2,6 +2,9 @@
 
 printf "Configuration of autoinvoice bash-sciprt started\n"
 
+# Installing required packages
+sudo apt-get --assume-yes install gcc bc ted sed gawk
+
 # Configure the environment
 mkdir conf-enabled
 if [[ $? -ne 0 ]]; then
