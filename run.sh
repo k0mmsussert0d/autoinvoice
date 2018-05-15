@@ -12,10 +12,13 @@ fi
 for V in "${filelist[@]}"; do
     source $V
     filename="$buyer_name-$ordinal_no.rtf"
-    source generate.sh "$rtf_dir/$rtf_template" "$filename" "$V"
+    target_dir="output/$buyer_name"
+    mkdir -p "$target_dir"
+    source generate.sh "$rtf_dir/$rtf_template" "output/$buyer_name/$filename" "$V"
     if [[ ! -z $mail_bcc ]] ; then
-        mutt -s "$mail_subject" "$mail_to" -b "$mail_bcc" -a "$filename" < "$mail_dir/$mail_template"
+        mutt -e "set content_type=text/html" -s "$mail_subject" -b "$mail_bcc" "$mail_to" -a "$filename" < "$mail_dir/$mail_template"
     else
-        mutt -s "$mail_subject" "$mail_to" -a "$filename" < "$mail_dir/$mail_template"
+        mutt -e "set content_type=text/html" -s "$mail_subject" "$mail_to" -a "$filename" < "$mail_dir/$mail_template"
     fi
+    mv "$target_dir/$filename" "$target_dir/$ordinal_no"
 done
