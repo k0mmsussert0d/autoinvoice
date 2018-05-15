@@ -22,7 +22,8 @@ declare -A to_print_protected
 # Parse input arguments
 src_file=$1
 dst_file=$2
-var_file=$3
+var_file=$(readlink "$3")
+var_file=$(echo "${var_file/../$PWD}")
 
 # Number of items on the invoice
 items=0
@@ -79,7 +80,7 @@ for (( i=1; i <= $lines; i++ )) ; do
         print="%0"$val"d"
         continue
     fi
-    
+
     # Look for ordinal number
     if [[ $var == "ordinal_no" ]] ; then
         # Generate full invoice number
