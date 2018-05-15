@@ -13,7 +13,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Build c apps
-gcc dateadd.c -o dateadd
+gcc dateadd.c -std=c11 -o dateadd
 gcc utf.c -std=c11 -o utf
 if [[ $? -ne 0 ]]; then
     printf "Building C apps failed. You need a C11 compatible GCC compiler\nExiting\n"
