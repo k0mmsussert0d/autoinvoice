@@ -7,10 +7,6 @@ if [[ ! -d "$DIR" ]] ; then
 fi
 . "$DIR/include/func.sh"
 
-# Source files
-itemrow=rows/item
-taxrow=rows/taxrate
-
 # Array stroring all values to be put into the output file,
 # will be cleared on every item iteration
 declare -A to_print
@@ -20,10 +16,14 @@ declare -A to_print
 declare -A to_print_protected
 
 # Parse input arguments
-src_file=$1
-dst_file=$2
+src_file="$1/invoice.rtf" # RTF Invoice template
+dst_file=$2 # RTF Invoice Output
 var_file=$(readlink "$3")
-var_file=$(echo "${var_file/../$PWD}")
+var_file=$(echo "${var_file/../$PWD}") # Config file (absolute path)
+
+# Table rows source files
+itemrow="$1/item"
+taxrow="$1/taxrate"
 
 # Number of items on the invoice
 items=0
