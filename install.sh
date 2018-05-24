@@ -3,6 +3,7 @@
 printf "Configuration of autoinvoice bash-sciprt started\n"
 
 # Installing required packages
+printf "Dependencies will now be installed using apt-get\n"
 sudo apt-get --assume-yes install gcc bc sed gawk
 
 # Configure the environment
@@ -13,6 +14,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Build c apps
+printf "Compiling C dependencies using your gcc compiler\n"
 gcc dateadd.c -std=c11 -o dateadd
 gcc utf.c -std=c11 -o utf
 if [[ $? -ne 0 ]]; then
