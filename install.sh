@@ -3,10 +3,10 @@
 printf "Configuration of autoinvoice bash-sciprt started\n"
 
 # Installing required packages
-sudo apt-get --assume-yes install gcc bc ted sed gawk
+sudo apt-get --assume-yes install gcc bc sed gawk
 
 # Configure the environment
-mkdir conf-enabled
+mkdir -p conf-enabled
 if [[ $? -ne 0 ]]; then
     printf "User %s is not allowed to perform mkdir\nExiting\n" "$USER"
     exit 1
