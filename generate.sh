@@ -25,6 +25,9 @@ var_file=$(echo "${var_file/../$PWD}") # Config file (absolute path)
 itemrow="$1/item"
 taxrow="$1/taxrate"
 
+# Source file for invoice number
+numbers_file="numbers"
+
 # Number of items on the invoice
 items=0
 
@@ -64,6 +67,16 @@ for (( i=1; i <= $lines; i++ )) ; do
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
 
+    # Look for ordinal number
+    if [[ $var == "ordinal_no" ]] ; then
+        source $numbers_file
+        pnt=$(echo "${val//\$}")
+        gawk -i inplace '{FS=OFS="=" }/$pnt/{$2+=1}1' $numbers_file
+        val=$(eval echo $val)
+        nr=$(printf "$print" "$val")
+        continue
+    fi
+
     # Evaluate the variable, so the variables inside it will get defined
     val=$(eval echo $val)
 
@@ -78,15 +91,6 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Look for invoice number syntax
     if [[ $var == "print_no" ]] ; then
         print="%0"$val"d"
-        continue
-    fi
-
-    # Look for ordinal number
-    if [[ $var == "ordinal_no" ]] ; then
-        # Generate full invoice number
-        nr=$(printf "$print" "$val")
-        # Increment ordinal number in var_file
-        gawk -i inplace '{FS=OFS="=" }/ordinal_no/{$2+=1}1' $var_file
         continue
     fi
 
