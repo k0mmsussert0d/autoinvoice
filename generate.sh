@@ -63,16 +63,28 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Get i-th line of a var_file
 	line=$(sed -n ""$i"p" $var_file)
 
+    # Write the previous set in an evaluated form to the separate file
+    if [[ ! -z $var && ! -z $val ]] ; then
+        echo "${var//\#}=$val" >> tempfile
+    fi
+
     # Get variable name and its value (separated by '=' character)
 	var=$(echo $line | cut -d'=' -f1)
 	val=$(echo $line | cut -d'=' -f2)
 
-    # Look for ordinal number
+    # Look for ordinal number marker
     if [[ $var == "ordinal_no" ]] ; then
+        # Get ordinal number value
         source $numbers_file
+        # Get ordinal number variable name
         pnt=$(echo "${val//\$}")
-        gawk -i inplace '{FS=OFS="=" }/$pnt/{$2+=1}1' $numbers_file
+        # Prepare string for awk to use
+        gawk_string="{FS=OFS=\"=\" }/"$pnt"/{\$2+=1}1"
+        # Increment the value in file
+        gawk -i inplace "$gawk_string" $numbers_file
+        # Apply the value for the script
         val=$(eval echo $val)
+        # Form valid invoice number
         nr=$(printf "$print" "$val")
         continue
     fi
