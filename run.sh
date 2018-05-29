@@ -4,6 +4,15 @@ filelist=$(ls -d conf-enabled/*)
 rtf_dir="templates/rtf"
 mail_dir="templates/mail"
 numbers_file="data/numbers"
+month_file="data/month"
+
+# Reset invoice numbers on a new month
+old_month=$(cat $month_file)
+today_month=$(date '+%m')
+if [[ $old_month -ne $today_month ]] ; then
+    sed -i 's%\([0-9]\+\)%1%' $numbers_file
+fi
+echo "$today_month" > $month_file
 
 if [[ ${#filelist[@]} -eq 0 ]]; then
     printf "No activated scripts. Exiting\n"
@@ -13,8 +22,10 @@ fi
 for V in "${filelist[@]}"; do
     source $numbers_file
     source $V
+
+    # Check if it's invoicing date for this invoice
     today_day=$(date '+%d')
-    if [[ $today_day -ne $day_on ]] ; then
+    if [[ $today_day -ne $on_day ]] ; then
         if [[ $1 == "--no-live" ]] ; then
             printf "Generating a document on a wrong date, since --no-live option has been used\n"
         else
