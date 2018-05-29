@@ -26,7 +26,7 @@ itemrow="$1/item"
 taxrow="$1/taxrate"
 
 # Source file for invoice number
-numbers_file="numbers"
+numbers_file="data/numbers"
 
 # Number of items on the invoice
 items=0
@@ -43,7 +43,7 @@ declare -A tax_whole_gross
 # Get current date values
 d=$(date '+%d')
 m_long=$(date '+%m')
-m=$(date '+%-m')
+m=$(date '+%m')
 y=$(date '+%Y')
 today=$y"-"$m_long"-"$d
 

@@ -3,7 +3,7 @@
 filelist=$(ls -d conf-enabled/*)
 rtf_dir="templates/rtf"
 mail_dir="templates/mail"
-numbers_file=numbers
+numbers_file="data/numbers"
 
 if [[ ${#filelist[@]} -eq 0 ]]; then
     printf "No activated scripts. Exiting\n"
@@ -13,6 +13,14 @@ fi
 for V in "${filelist[@]}"; do
     source $numbers_file
     source $V
+    today_day=$(date '+%d')
+    if [[ $today_day -ne $day_on ]] ; then
+        if [[ $1 == "--no-live" ]] ; then
+            printf "Generating a document on a wrong date, since --no-live option has been used\n"
+        else
+            exit 1
+        fi
+    fi
     filename="$buyer_name-$ordinal_no"
     target_dir="output/$buyer_name"
     mkdir -p "$target_dir"
