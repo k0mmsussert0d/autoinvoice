@@ -43,7 +43,7 @@ declare -A tax_whole_gross
 # Get current date values
 d=$(date '+%d')
 m_long=$(date '+%m')
-m=$(date '+%m')
+m=$(date '+%-m')
 y=$(date '+%Y')
 today=$y"-"$m_long"-"$d
 
