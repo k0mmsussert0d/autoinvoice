@@ -8,6 +8,8 @@ sudo apt-get --assume-yes install gcc bc sed gawk
 
 # Configure the environment
 mkdir -p conf-enabled
+mkdir -p data
+echo $(date '+%m') > data/month
 if [[ $? -ne 0 ]]; then
     printf "User %s is not allowed to perform mkdir\nExiting\n" "$USER"
     exit 1
