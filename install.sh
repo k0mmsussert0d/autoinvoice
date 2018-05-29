@@ -4,10 +4,12 @@ printf "Configuration of autoinvoice bash-sciprt started\n"
 
 # Installing required packages
 printf "Dependencies will now be installed using apt-get\n"
-sudo apt-get --assume-yes install gcc bc sed gawk
+sudo apt-get --assume-yes install gcc bc sed gawk libreoffice
 
 # Configure the environment
 mkdir -p conf-enabled
+mkdir -p data
+echo $(date '+%m') > data/month
 if [[ $? -ne 0 ]]; then
     printf "User %s is not allowed to perform mkdir\nExiting\n" "$USER"
     exit 1

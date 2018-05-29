@@ -26,7 +26,7 @@ itemrow="$1/item"
 taxrow="$1/taxrate"
 
 # Source file for invoice number
-numbers_file="numbers"
+numbers_file="data/numbers"
 
 # Number of items on the invoice
 items=0
