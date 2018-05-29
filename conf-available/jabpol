@@ -31,6 +31,7 @@ item_quan=1
 item_price_netto=2000.00
 item_tax_rate=23
 #Meta#
+on_day=29
 rtf_template=default
 mail_template=default.txt
 mail_to=maksymilian.babarowski@gmail.com
