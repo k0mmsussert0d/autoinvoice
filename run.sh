@@ -49,7 +49,7 @@ for V in "${filelist[@]}"; do
     source tempfile
 
     # Convert invoice to PDF
-    /usr/share/Ted/examples/rtf2pdf.sh "output/$buyer_name/$filename.rtf" "output/$buyer_name/$filename.pdf"
+    libreoffice --headless --invisible --norestore --convert-to pdf --outdir "$target_dir" "output/$buyer_name/$filename.rtf"
 
     # Send if not running in test environment
     if [[ $1 != "--no-live" ]] ; then
