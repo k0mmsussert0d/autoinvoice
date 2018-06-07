@@ -218,12 +218,10 @@ done
 
 # Print arrays
 for K in "${!to_print_protected[@]}"; do
-    echo "$K" "${to_print_protected[$K]}"
     replace "$K" "${to_print_protected[$K]}" "$dst_file"
 done
 
 for K in "${!to_print[@]}"; do
-    echo "$K" "${to_print[$K]}"
     replace "$K" "${to_print[$K]}" "$dst_file"
 done
 
@@ -259,7 +257,6 @@ for K in "${!tax_whole_netto[@]}"; do
     fi
 
     for L in "${!to_print_tax[@]}"; do
-        echo "$L" "${to_print_tax[$L]}"
         replace "$L" "${to_print_tax[$L]}" "$dst_file"
     done
     ((j++))
