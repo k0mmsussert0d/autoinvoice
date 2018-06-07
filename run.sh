@@ -1,18 +1,28 @@
 #!/bin/bash
 
-filelist=$(ls -d conf-enabled/*)
+filelist=($(ls -d conf-enabled/*))
 rtf_dir="templates/rtf"
 mail_dir="templates/mail"
-numbers_file="data/numbers"
+numbers_file_m="data/numbers_month"
+numbers_file_y="data/numbers_year"
 month_file="data/month"
+year_file="data/year"
 
 # Reset invoice numbers on a new month
 old_month=$(cat $month_file)
 today_month=$(date '+%m')
 if [[ $old_month -ne $today_month ]] ; then
-    sed -i 's%\([0-9]\+\)%1%' $numbers_file
+    sed -i 's%\([0-9]\+\)%1%' $numbers_file_m
 fi
 echo "$today_month" > $month_file
+
+# Reset invoice numbers on a new year
+old_year=$(cat $year_file)
+today_year=$(date '+%Y')
+if [[ $old_year -ne $today_year ]] ; then
+    sed - i 's%\([0-9]\+\)%1%' $numbers_file_y
+fi
+echo "$today_year" > $year_file
 
 # Exit, if conf-enabled dir is empty (no enabled scripts)
 if [[ ${#filelist[@]} -eq 0 ]]; then
@@ -23,7 +33,8 @@ fi
 # Run generate.sh for each config
 for V in "${filelist[@]}"; do
     # Run source files to get variables
-    source $numbers_file
+    source $numbers_file_m
+    source $numbers_file_y
     source $V
 
     # Check if it's invoicing date for this invoice
@@ -43,6 +54,7 @@ for V in "${filelist[@]}"; do
     mkdir -p "$target_dir"
 
     # Generate an invoice
+    printf "Generating: from %s to %s using %s" "$rtf_template" "$filename.rtf" "$V"
     source generate.sh "$rtf_dir/$rtf_template" "output/$buyer_name/$filename.rtf" "$V"
 
     # Run new variables source file
