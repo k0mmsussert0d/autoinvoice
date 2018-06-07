@@ -8,6 +8,27 @@ numbers_file_y="data/numbers_year"
 month_file="data/month"
 year_file="data/year"
 
+# Parsing run arguments
+no_live=0
+force=0
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    --no-live)
+    no_live=1
+    shift
+    ;;
+
+    --force|-f)
+    force=1
+    shift
+    ;;
+esac
+done
+
 # Reset invoice numbers on a new month
 old_month=$(cat $month_file)
 today_month=$(date '+%m')
@@ -41,7 +62,7 @@ for V in "${filelist[@]}"; do
     today_day=$(date '+%d')
     if [[ $today_day -ne $on_day ]] ; then
         # Generate invoice anyway in test environment
-        if [[ $1 == "--no-live" ]] ; then
+        if [[ $no_live -eq 1 ]] ; then
             printf "Generating a document on a wrong date, since --no-live option has been used\n"
         else
             exit 1
@@ -64,7 +85,7 @@ for V in "${filelist[@]}"; do
     libreoffice --headless --invisible --norestore --convert-to pdf --outdir "$target_dir" "output/$buyer_name/$filename.rtf"
 
     # Send if not running in test environment
-    if [[ $1 != "--no-live" ]] ; then
+    if [[ $no_live -eq 0 || $force -eq 1 ]] ; then
         # With BCC if specified in config file
         if [[ ! -z $mail_bcc ]] ; then
             mutt -e "set content_type=text/html" -s "$mail_subject" -b "$mail_bcc" "$mail_to" -a "$filename" < "$mail_dir/$mail_template"
