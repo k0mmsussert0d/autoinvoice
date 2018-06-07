@@ -26,7 +26,8 @@ itemrow="$1/item"
 taxrow="$1/taxrate"
 
 # Source file for invoice number
-numbers_file="data/numbers"
+numbers_file_m="data/numbers_month"
+numbers_file_y="data/numbers_year"
 
 # Number of items on the invoice
 items=0
@@ -75,13 +76,15 @@ for (( i=1; i <= $lines; i++ )) ; do
     # Look for ordinal number marker
     if [[ $var == "ordinal_no" ]] ; then
         # Get ordinal number value
-        source $numbers_file
+        source $numbers_file_m
+        source $numbers_file_y
         # Get ordinal number variable name
         pnt=$(echo "${val//\$}")
         # Prepare string for awk to use
         gawk_string="{FS=OFS=\"=\" }/"$pnt"/{\$2+=1}1"
         # Increment the value in file
-        gawk -i inplace "$gawk_string" $numbers_file
+        gawk -i inplace "$gawk_string" $numbers_file_m
+        gawk -i inplace "$gawk_string" $numbers_file_y
         # Apply the value for the script
         val=$(eval echo $val)
         # Form valid invoice number
@@ -266,3 +269,6 @@ done
 replace "#sum_tax_whole_netto" "$tax_whole_netto_sum" "$dst_file"
 replace "#sum_tax_whole_tax" "$tax_whole_tax_sum" "$dst_file"
 replace "#sum_tax_whole_gross" "$tax_whole_gross_sum" "$dst_file"
+
+# Replace missing currency symbols
+replace "#curr" "$currency" "$dst_file"
