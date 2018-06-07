@@ -10,6 +10,7 @@ sudo apt-get --assume-yes install gcc bc sed gawk libreoffice
 mkdir -p conf-enabled
 mkdir -p data
 echo $(date '+%m') > data/month
+echo $(date '+%Y') > data/year
 if [[ $? -ne 0 ]]; then
     printf "User %s is not allowed to perform mkdir\nExiting\n" "$USER"
     exit 1
