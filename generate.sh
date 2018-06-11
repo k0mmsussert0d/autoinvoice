@@ -18,8 +18,12 @@ declare -A to_print_protected
 # Parse input arguments
 src_file="$1/invoice.rtf" # RTF Invoice template
 dst_file=$2 # RTF Invoice Output
-var_file=$(readlink "$3")
-var_file=$(echo "${var_file/../$PWD}") # Config file (absolute path)
+if [[ -L $3 ]] ; then
+    var_file=$(readlink "$3")
+    var_file=$(echo "${var_file/../$PWD}") # Config file (absolute path)
+else
+    var_file="$3"
+fi
 
 # Table rows source files
 itemrow="$1/item"
