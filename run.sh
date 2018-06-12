@@ -78,7 +78,7 @@ for V in "${filelist[@]}"; do
 
     # Generate an invoice
     printf "Generating: from %s to %s using %s" "$rtf_template" "$filename.rtf" "$V"
-    source generate.sh "$rtf_dir/$rtf_template" "output/$buyer_name/$filename.rtf" "$V"
+    ./generate.sh "$rtf_dir/$rtf_template" "output/$buyer_name/$filename.rtf" "$V"
 
     # Run new variables source file
     source tempfile
