@@ -18,14 +18,31 @@
             <a class="navbar-brand" href="#">autoinvoice – Control Panel</a>
           </div>
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="configs.php">Configs</a></li>
+            <li><a href="#">Home</a></li>
+            <li class="active"><a href="configs.php">Configs</a></li>
             <li><a href="history.php">History</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           </ul>
         </div>
-      </nav>
+    </nav>
+    <div class="container" style="padding-left: 200px; padding-right: 200px; margin-top: 50px;">
+        <h2>Available configuration files</h2>
+        <p>This is a list of available configuration files from <i>conf-avaialable</i> directory.<br />
+            Enabled files (linked in <i>conf-enabled</i>) are marked as green.</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Default</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
  </body>
 </html>
