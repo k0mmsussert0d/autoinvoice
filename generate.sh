@@ -250,7 +250,7 @@ for K in "${!tax_whole_netto[@]}"; do
     tax_whole_netto_sum=$(addToArray "$tax_whole_netto_sum" "$curr_tax_whole_netto")
     to_print_tax["#tax_whole_netto"]=$curr_tax_whole_netto
 
-    curr_tax_whole_tax=${tax_whole_tax[$K])}
+    curr_tax_whole_tax=${tax_whole_tax[$K]}
     tax_whole_tax_sum=$(addToArray "$tax_whole_tax_sum" "$curr_tax_whole_tax")
     to_print_tax["#tax_whole_tax"]=$curr_tax_whole_tax
 
