@@ -14,3 +14,4 @@ dateadd
 
 # Enabled configs directory (created during installation) #
 conf-enabled/
+data/numbers_*
