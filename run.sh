@@ -77,7 +77,7 @@ for V in "${filelist[@]}"; do
     mkdir -p "$target_dir"
 
     # Generate an invoice
-    printf "Generating: from %s to %s using %s" "$rtf_template" "$filename.rtf" "$V"
+    printf "Generating: from %s to %s using %s\n" "$rtf_template" "$filename.rtf" "$V"
     ./generate.sh "$rtf_dir/$rtf_template" "output/$buyer_name/$filename.rtf" "$V"
 
     # Run new variables source file
