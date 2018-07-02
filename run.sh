@@ -90,9 +90,9 @@ for V in "${filelist[@]}"; do
     if [[ $no_live -eq 0 || $force -eq 1 ]] ; then
         # With BCC if specified in config file
         if [[ ! -z $mail_bcc ]] ; then
-            mutt -e "set content_type=text/html" -s "$mail_subject" -b "$mail_bcc" "$mail_to" -a "$target_dir/$filename.pdf" < "$mail_dir/$mail_template"
+            mutt -e "set content_type=text/html" -s "$mail_subject" -b "$mail_bcc" -a "$target_dir/$filename.pdf" -- "$mail_to" < "$mail_dir/$mail_template"
         else
-            mutt -e "set content_type=text/html" -s "$mail_subject" "$mail_to" -a "$target_dir/$filename.pdf" < "$mail_dir/$mail_template"
+            mutt -e "set content_type=text/html" -s "$mail_subject" -a "$target_dir/$filename.pdf" -- "$mail_to" < "$mail_dir/$mail_template"
         fi
     fi
     # Delete old RTF file
