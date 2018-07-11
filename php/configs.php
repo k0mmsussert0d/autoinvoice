@@ -1,3 +1,13 @@
+<?php
+    include_once( "var.php" );
+
+    $conf_avaiable_dir = $APP_ROOT."/conf-available";
+    $conf_avaiable_list = scandir( $conf_avaiable_dir );
+
+    $conf_enabled_dir = $APP_ROOT."/conf-enabled";
+    $conf_enabled_list = scandir( $conf_enabled_dir );
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -34,13 +44,24 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Filename</th>
+                    <th width="90%">Filename</th>
+                    <th width="10%">Enabled</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Default</td>
-                </tr>
+                <?php
+                    foreach( $conf_avaiable_list as $V ) {
+                        if( substr( $V, 0, 1 ) === "." ) {
+                            continue;
+                        }
+
+                        echo "<tr>\n<td>".$V."</td>\n<td>";
+                        if( in_array( $V, $conf_enabled_list ) ) {
+                            echo "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>";
+                        }
+                        echo "</td></tr>\n";
+                    }
+                ?>
             </tbody>
         </table>
     </div>
