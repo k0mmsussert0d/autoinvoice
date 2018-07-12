@@ -56,9 +56,11 @@
                         }
 
                         echo "<tr>\n<td>".$V."</td>\n<td>";
+                        echo "<input type=\"checkbox\" name=\"enabled\" value=\"".$V."\" ";
                         if( in_array( $V, $conf_enabled_list ) ) {
-                            echo "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>";
+                            echo "checked ";
                         }
+                        echo "/>";
                         echo "</td></tr>\n";
                     }
                 ?>
