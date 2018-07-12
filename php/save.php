@@ -1,4 +1,8 @@
 <?php
+    function exit_success() {
+        header( "Location: configs.php" );
+    }
+
     include_once( "var.php" );
 
     $conf_avaiable_dir = $APP_ROOT."/conf-available";
@@ -22,6 +26,9 @@
                 exec( "cd ".$APP_ROOT."/conf-enabled && ln -s ../conf-available/".$V." ".$V, $output );
             }
         }
+    } else {
+        exec( "cd ".$APP_ROOT."/conf-enabled && rm *" );
     }
-    header('Location: configs.php');
+    
+    exit_success();
 ?>
