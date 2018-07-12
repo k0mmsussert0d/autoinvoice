@@ -38,9 +38,9 @@
         </div>
     </nav>
     <div class="container" style="padding-left: 200px; padding-right: 200px; margin-top: 50px;">
-        <h2>Available configuration files</h2>
+        <h2>Configuration files</h2>
         <p>This is a list of available configuration files from <i>conf-avaialable</i> directory.<br />
-            Enabled files (linked in <i>conf-enabled</i>) are marked as green.</p>
+            You can enable or disable them from being automatically executed using respective checkboxes.</p>
         <table class="table table-bordered">
             <thead>
                 <tr>
