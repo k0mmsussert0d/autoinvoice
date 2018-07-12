@@ -41,31 +41,36 @@
         <h2>Configuration files</h2>
         <p>This is a list of available configuration files from <i>conf-avaialable</i> directory.<br />
             You can enable or disable them from being automatically executed using respective checkboxes.</p>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th width="90%">Filename</th>
-                    <th width="10%">Enabled</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    foreach( $conf_avaiable_list as $V ) {
-                        if( substr( $V, 0, 1 ) === "." ) {
-                            continue;
-                        }
+        <form action="save.php" method="GET">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th width="90%">Filename</th>
+                        <th width="10%">Enabled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        foreach( $conf_avaiable_list as $V ) {
+                            if( substr( $V, 0, 1 ) === "." ) {
+                                continue;
+                            }
 
-                        echo "<tr>\n<td>".$V."</td>\n<td>";
-                        echo "<input type=\"checkbox\" name=\"enabled\" value=\"".$V."\" ";
-                        if( in_array( $V, $conf_enabled_list ) ) {
-                            echo "checked ";
+                            echo "<tr>\n<td>".$V."</td>\n<td>";
+                            echo "<input type=\"checkbox\" name=\"enabled[]\" value=\"".$V."\" ";
+                            if( in_array( $V, $conf_enabled_list ) ) {
+                                echo "checked ";
+                            }
+                            echo "/>";
+                            echo "</td></tr>\n";
                         }
-                        echo "/>";
-                        echo "</td></tr>\n";
-                    }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+            <div class="pull-right">
+                <input type="submit" class="btn btn-info" value="Save" style="text-align: right;">
+            </div>
+        </form>
     </div>
  </body>
 </html>
