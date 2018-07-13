@@ -46,7 +46,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                   
+                    <?php
+                        foreach( $file_array as $line ) {
+                            echo "<tr>\n\t<td>";
+                        }
+
+                    ?>
+                </tbody>
             </table>
             <div class="pull-right">
                 <input type="submit" class="btn btn-info" value="Save" style="text-align: right;">
