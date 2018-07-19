@@ -2,7 +2,7 @@
     include_once( "var.php" );
 
     if( $_GET ) {
-        $filename = $_GET[ 'file' ];
+        $filename = $_GET[ 'config' ];
         $file_array = file( $filename, FILE_IGNORE_NEW_LINES, FILE_SKIP_EMPTY_LINES );
     }
 ?>
@@ -47,8 +47,8 @@
                 </thead>
                 <tbody>
                     <?php
-                        foreach( $file_array as $line ) {
-                            echo "<tr>\n\t<td>";
+                        foreach( $file_array as $line_num => $line ) {
+                            
                         }
 
                     ?>
