@@ -56,7 +56,7 @@
                                 continue;
                             }
 
-                            echo "<tr>\n<td>".$V."</td>\n<td>";
+                            echo "<tr>\n<td><a href=\"edit.php?config=".$V."\">".$V."</a></td>\n<td>";
                             echo "<input type=\"checkbox\" name=\"enabled[]\" value=\"".$V."\" ";
                             if( in_array( $V, $conf_enabled_list ) ) {
                                 echo "checked ";
