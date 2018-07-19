@@ -2,8 +2,8 @@
     include_once( "var.php" );
 
     if( $_GET ) {
-        $filename = $_GET[ 'config' ];
-        $file_array = file( $filename, FILE_IGNORE_NEW_LINES, FILE_SKIP_EMPTY_LINES );
+        $filename = $APP_ROOT."/conf-available/".$_GET[ 'config' ];
+        $file_array = file( $filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
     }
 ?>
 
@@ -47,10 +47,14 @@
                 </thead>
                 <tbody>
                     <?php
-                        foreach( $file_array as $line_num => $line ) {
-                            
+                        foreach( $file_array as $line_number => $line ) {
+                            if( $line[ 0 ] != '#' ) {
+                                list( $var, $val ) = explode( '=', $line );
+                                echo "<tr><td>".$var;
+                                echo "</td>";
+                                echo "<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>";
+                            }
                         }
-
                     ?>
                 </tbody>
             </table>
