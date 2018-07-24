@@ -1,5 +1,6 @@
 <?php
     include_once( "var.php" );
+    include_once( "edit_labels.php" );
 
     if( $_GET ) {
         $filename = $APP_ROOT."/conf-available/".$_GET[ 'config' ];
@@ -50,7 +51,7 @@
                         foreach( $file_array as $line_number => $line ) {
                             if( $line[ 0 ] != '#' ) {
                                 list( $var, $val ) = explode( '=', $line );
-                                echo "<tr><td>".$var;
+                                echo "<tr><td>".getFieldLabel( $var );
                                 echo "</td>";
                                 echo "<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>";
                             }
