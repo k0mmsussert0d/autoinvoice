@@ -64,12 +64,15 @@
                 </thead>
                 <tbody>
                     <?php
+                        $i = 0;
                         foreach( $file_array as $line_number => $line ) {
                             if( $line[ 0 ] != '#' ) {
                                 list( $var, $val ) = explode( '=', $line );
                                 echo "<tr>\n\t<td>".getFieldLabel( $var );
                                 echo "</td>\n";
                                 echo "\t<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
+                            } else {
+                                echo "<input type=\"hidden\" name=\"hidden[".$i++."]\" value=\"".$line."\" />";
                             }
                         }
                     ?>
