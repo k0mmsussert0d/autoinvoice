@@ -4,11 +4,18 @@
         $filename = $_SESSION[ "filename" ];
         file_put_contents( $filename, "" ); //clear file
         foreach( $_POST as $K => $V ) {
-            echo $K."=>".$V."\n";
-            if( substr( $K, 0, 6 ) === "hidden" ) {
-                continue;
+            $com = 0;
+            $pos = strpos( $K, "&" );
+            if( $K[ 0 ] == "^" ) {
+                $com = 1;
+            } else if( $pos ) {
+                $K = substr( $K, 0, $pos );
+            }
+            if( !$com ) {
+                $V = "\"".$V."\"";
+                file_put_contents( $filename, $K."=".$V."\n", FILE_APPEND );
             } else {
-                file_put_contents( $filename, $K."="."\"".$V."\"\n", FILE_APPEND );
+                file_put_contents( $filename, $V."\n", FILE_APPEND );
             }
         }
     }

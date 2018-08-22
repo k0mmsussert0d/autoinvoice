@@ -67,7 +67,12 @@
                 </thead>
                 <tbody>
                     <?php
+                        function addComment( $text, $i ) {
+                            echo "\t<input type=\"hidden\" name=\"^".$i."\" value=\"".$text."\" />\n";
+                        }
+
                         $i = -1;
+                        $j = 0;
                         $item = 0;
                         foreach( $file_array as $line_number => $line ) {
                             if( $line[ 0 ] != '#' ) {
@@ -75,13 +80,21 @@
                                 echo "<tr>\n\t<td>".getFieldLabel( $var );
                                 echo "</td>\n";
                             } else {
-                                echo "<input type=\"hidden\" name=\"hidden[".++$i."]\" value=\"".$line."\" />";
-                                $item = 1;
+                                switch( $line ) {
+                                    case "#Item#":
+                                        $item = 1;
+                                        $i++;
+                                        break;
+                                    case "#Meta#":
+                                        $item = 0;
+                                        break;
+                                }
+                                addComment( $line, $j++ );
                                 continue;
                             }
 
                             if( $item ) {
-                                echo "\t<td><input type=\"text\" name=\"".$var."[ ".$i." ]"."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
+                                echo "\t<td><input type=\"text\" name=\"".$var."&".$i."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
                             } else {
                                 echo "\t<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
                             }
