@@ -1,10 +1,13 @@
 <?php
+    session_start();
     include_once( "var.php" );
     include_once( "edit_labels.php" );
 
     if( $_GET ) {
         $filename = $APP_ROOT."/conf-available/".$_GET[ 'config' ];
         $file_array = file( $filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+
+        $_SESSION[ "filename" ] = $filename;
     }
 ?>
 
@@ -54,7 +57,7 @@
         </div>
     </nav>
     <div class="container" style="padding-left: 200px; padding-right: 200px; margin-top: 50px;">
-        <form action="save.php" method="GET">
+        <form action="savefile.php" method="POST">
             <table class="table table-bordered" id="list">
                 <thead>
                     <tr>
@@ -64,15 +67,23 @@
                 </thead>
                 <tbody>
                     <?php
-                        $i = 0;
+                        $i = -1;
+                        $item = 0;
                         foreach( $file_array as $line_number => $line ) {
                             if( $line[ 0 ] != '#' ) {
                                 list( $var, $val ) = explode( '=', $line );
                                 echo "<tr>\n\t<td>".getFieldLabel( $var );
                                 echo "</td>\n";
-                                echo "\t<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
                             } else {
-                                echo "<input type=\"hidden\" name=\"hidden[".$i++."]\" value=\"".$line."\" />";
+                                echo "<input type=\"hidden\" name=\"hidden[".++$i."]\" value=\"".$line."\" />";
+                                $item = 1;
+                                continue;
+                            }
+
+                            if( $item ) {
+                                echo "\t<td><input type=\"text\" name=\"".$var."[ ".$i." ]"."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
+                            } else {
+                                echo "\t<td><input type=\"text\" name=\"".$var."\" value=\"".trim( $val, "\"")."\" /></td>\n</tr>\n";
                             }
                         }
                     ?>
