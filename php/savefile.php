@@ -11,6 +11,15 @@
             } else if( $pos ) {
                 $K = substr( $K, 0, $pos );
             }
+
+            if( substr( $K, 0, 3 ) === "var" ) {
+                file_put_contents( $filename, $V."=", FILE_APPEND );
+                continue;
+            } else if( substr( $K, 0, 3 ) === "val" ) {
+                file_put_contents( $filename, $V."\n", FILE_APPEND );
+                continue;
+            }
+
             if( !$com ) {
                 $V = "\"".$V."\"";
                 file_put_contents( $filename, $K."=".$V."\n", FILE_APPEND );

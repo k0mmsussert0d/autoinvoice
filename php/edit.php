@@ -36,8 +36,8 @@
             var row = table.insertRow(table.rows.length);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
-            cell1.innerHTML = "<input type=\"text\" name=\"" + "val" + i + "\" value=\"" + left + "\" />";
-            cell2.innerHTML = "<input type=\"text\" name=\"" + "var" + i + "\" value=\"" + right + "\" />";
+            cell1.innerHTML = "<input type=\"text\" name=\"" + "var" + i + "\" value=\"" + left + "\" />";
+            cell2.innerHTML = "<input type=\"text\" name=\"" + "val" + i + "\" value=\"" + right + "\" />";
             i++;
         }
     </script>
